@@ -6,14 +6,28 @@
 
 package com.mycompany.scrolldiu;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.highgui.HighGui;
+import org.opencv.imgcodecs.Imgcodecs;
+
 /**
  *
  * @author Sara
  */
 public class Frame extends javax.swing.JFrame {
 
-    /** Creates new form Frame */
+    JFileChooser fc = new JFileChooser();
+    FileNameExtensionFilter filtro = null;
+    Mat img = null;
+    
     public Frame() {
+        nu.pattern.OpenCV.loadShared();
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         initComponents();
     }
 
@@ -27,7 +41,7 @@ public class Frame extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        canvasImage1 = new com.mycompany.scrolldiu.CanvasImage();
+        imageC = new com.mycompany.scrolldiu.CanvasImage();
         jPanel1 = new javax.swing.JPanel();
         rMin = new javax.swing.JTextField();
         gMin = new javax.swing.JTextField();
@@ -44,21 +58,24 @@ public class Frame extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        mFile = new javax.swing.JMenu();
+        mOpen = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        javax.swing.GroupLayout canvasImage1Layout = new javax.swing.GroupLayout(canvasImage1);
-        canvasImage1.setLayout(canvasImage1Layout);
-        canvasImage1Layout.setHorizontalGroup(
-            canvasImage1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout imageCLayout = new javax.swing.GroupLayout(imageC);
+        imageC.setLayout(imageCLayout);
+        imageCLayout.setHorizontalGroup(
+            imageCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 248, Short.MAX_VALUE)
         );
-        canvasImage1Layout.setVerticalGroup(
-            canvasImage1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        imageCLayout.setVerticalGroup(
+            imageCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 248, Short.MAX_VALUE)
         );
 
-        jScrollPane1.setViewportView(canvasImage1);
+        jScrollPane1.setViewportView(imageC);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -173,6 +190,21 @@ public class Frame extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        mFile.setText("File");
+
+        mOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        mOpen.setText("Open File");
+        mOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mOpenActionPerformed(evt);
+            }
+        });
+        mFile.add(mOpen);
+
+        jMenuBar1.add(mFile);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -180,9 +212,9 @@ public class Frame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -196,6 +228,18 @@ public class Frame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void mOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mOpenActionPerformed
+        // TODO add your handling code here:
+        filtro = new FileNameExtensionFilter("Imagen", "jpg", "png");
+        fc.setFileFilter(filtro);
+        int res = fc.showOpenDialog(null);
+        if(res == JFileChooser.APPROVE_OPTION){
+            File fichero = fc.getSelectedFile();
+            img = Imgcodecs.imread(fichero.getAbsolutePath());
+            imageC.setImage((BufferedImage) HighGui.toBufferedImage(img));
+        }
+    }//GEN-LAST:event_mOpenActionPerformed
 
     /**
      * @param args the command line arguments
@@ -236,18 +280,21 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JTextField bMax;
     private javax.swing.JTextField bMean;
     private javax.swing.JTextField bMin;
-    private com.mycompany.scrolldiu.CanvasImage canvasImage1;
     private javax.swing.JTextField gMax;
     private javax.swing.JTextField gMean;
     private javax.swing.JTextField gMin;
+    private com.mycompany.scrolldiu.CanvasImage imageC;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenu mFile;
+    private javax.swing.JMenuItem mOpen;
     private javax.swing.JTextField rMax;
     private javax.swing.JTextField rMean;
     private javax.swing.JTextField rMin;
