@@ -6,9 +6,12 @@
 
 package com.mycompany.scrolldiu;
 
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JScrollBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -24,11 +27,35 @@ public class Frame extends javax.swing.JFrame {
     JFileChooser fc = new JFileChooser();
     FileNameExtensionFilter filtro = null;
     Mat img = null;
+    EstadisticasImagen ei = null;
+    JScrollBar vBar, hBar;
+    
+    class MyListener implements AdjustmentListener{
+
+        @Override
+        public void adjustmentValueChanged(AdjustmentEvent e) {
+            System.out.println("Barra deslizada");
+            System.out.println("Posición: " + desl.getViewport().getViewPosition().toString());
+            System.out.println("Tamaño: " + desl.getViewport().getExtentSize().toString());
+            ei.calculaEstadisticas(img, desl.getViewport().getViewPosition(), desl.getViewport().getExtentSize());
+            int max[] = ei.getMaximo();
+            rMax.setText(""+max[0]);
+            gMax.setText(""+max[1]);
+            bMax.setText(""+max[2]);
+        }
+        
+    }
     
     public Frame() {
         nu.pattern.OpenCV.loadShared();
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         initComponents();
+        ei = new EstadisticasImagen();
+        
+        vBar = desl.getVerticalScrollBar();
+        hBar = desl.getHorizontalScrollBar();
+        vBar.addAdjustmentListener(new MyListener());
+        hBar.addAdjustmentListener(new MyListener());
     }
 
     /** This method is called from within the constructor to
@@ -40,7 +67,7 @@ public class Frame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
+        desl = new javax.swing.JScrollPane();
         imageC = new com.mycompany.scrolldiu.CanvasImage();
         jPanel1 = new javax.swing.JPanel();
         rMin = new javax.swing.JTextField();
@@ -75,7 +102,7 @@ public class Frame extends javax.swing.JFrame {
             .addGap(0, 248, Short.MAX_VALUE)
         );
 
-        jScrollPane1.setViewportView(imageC);
+        desl.setViewportView(imageC);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -211,7 +238,7 @@ public class Frame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(desl, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -221,7 +248,7 @@ public class Frame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(desl, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -280,6 +307,7 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JTextField bMax;
     private javax.swing.JTextField bMean;
     private javax.swing.JTextField bMin;
+    private javax.swing.JScrollPane desl;
     private javax.swing.JTextField gMax;
     private javax.swing.JTextField gMean;
     private javax.swing.JTextField gMin;
@@ -292,7 +320,6 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenu mFile;
     private javax.swing.JMenuItem mOpen;
     private javax.swing.JTextField rMax;
