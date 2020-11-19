@@ -11,6 +11,7 @@ import java.awt.event.AdjustmentListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.opencv.core.Core;
@@ -34,14 +35,27 @@ public class Frame extends javax.swing.JFrame {
 
         @Override
         public void adjustmentValueChanged(AdjustmentEvent e) {
-            System.out.println("Barra deslizada");
-            System.out.println("Posición: " + desl.getViewport().getViewPosition().toString());
-            System.out.println("Tamaño: " + desl.getViewport().getExtentSize().toString());
-            ei.calculaEstadisticas(img, desl.getViewport().getViewPosition(), desl.getViewport().getExtentSize());
+            try{
+                ei.calculaEstadisticas(img, desl.getViewport().getViewPosition(), desl.getViewport().getExtentSize());
+            update();
+            }catch(Exception ex){
+                //System.out.println(ex.getMessage());
+            }
+        }
+        
+        private void update(){
             int max[] = ei.getMaximo();
-            rMax.setText(""+max[0]);
+            int min[] = ei.getMinimo();
+            int mean[] = ei.getPromedio();
+            rMax.setText(""+max[2]);
             gMax.setText(""+max[1]);
-            bMax.setText(""+max[2]);
+            bMax.setText(""+max[0]);
+            rMean.setText(""+mean[2]);
+            gMean.setText(""+mean[1]);
+            bMean.setText(""+mean[0]);
+            rMin.setText(""+min[2]);
+            gMin.setText(""+min[1]);
+            bMin.setText(""+min[0]);
         }
         
     }
@@ -88,6 +102,8 @@ public class Frame extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         mFile = new javax.swing.JMenu();
         mOpen = new javax.swing.JMenuItem();
+        mAbout = new javax.swing.JMenu();
+        AboutUs = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -95,11 +111,11 @@ public class Frame extends javax.swing.JFrame {
         imageC.setLayout(imageCLayout);
         imageCLayout.setHorizontalGroup(
             imageCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 248, Short.MAX_VALUE)
+            .addGap(0, 265, Short.MAX_VALUE)
         );
         imageCLayout.setVerticalGroup(
             imageCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 248, Short.MAX_VALUE)
+            .addGap(0, 265, Short.MAX_VALUE)
         );
 
         desl.setViewportView(imageC);
@@ -230,6 +246,19 @@ public class Frame extends javax.swing.JFrame {
 
         jMenuBar1.add(mFile);
 
+        mAbout.setText("About");
+
+        AboutUs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        AboutUs.setText("About Us");
+        AboutUs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AboutUsActionPerformed(evt);
+            }
+        });
+        mAbout.add(AboutUs);
+
+        jMenuBar1.add(mAbout);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -238,8 +267,8 @@ public class Frame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(desl, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(desl, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -248,9 +277,9 @@ public class Frame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(desl, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(desl, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -262,11 +291,17 @@ public class Frame extends javax.swing.JFrame {
         fc.setFileFilter(filtro);
         int res = fc.showOpenDialog(null);
         if(res == JFileChooser.APPROVE_OPTION){
+            vBar.setValue(0);
+            hBar.setValue(0);
             File fichero = fc.getSelectedFile();
             img = Imgcodecs.imread(fichero.getAbsolutePath());
             imageC.setImage((BufferedImage) HighGui.toBufferedImage(img));
         }
     }//GEN-LAST:event_mOpenActionPerformed
+
+    private void AboutUsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AboutUsActionPerformed
+        JOptionPane.showMessageDialog(this, "Versión 1.0.1\n\nHecho por:\nAlejandro García Sosa\nSantiago Higuita Ardila");
+    }//GEN-LAST:event_AboutUsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -304,6 +339,7 @@ public class Frame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem AboutUs;
     private javax.swing.JTextField bMax;
     private javax.swing.JTextField bMean;
     private javax.swing.JTextField bMin;
@@ -320,6 +356,7 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JMenu mAbout;
     private javax.swing.JMenu mFile;
     private javax.swing.JMenuItem mOpen;
     private javax.swing.JTextField rMax;
