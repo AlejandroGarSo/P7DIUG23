@@ -64,6 +64,7 @@ public class Frame extends javax.swing.JFrame {
         nu.pattern.OpenCV.loadShared();
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         initComponents();
+        filtro = new FileNameExtensionFilter("Imagen", "jpg", "png");
         ei = new EstadisticasImagen();
         
         vBar = desl.getVerticalScrollBar();
@@ -99,9 +100,13 @@ public class Frame extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         mFile = new javax.swing.JMenu();
         mOpen = new javax.swing.JMenuItem();
+        mView = new javax.swing.JMenu();
+        mReset = new javax.swing.JMenuItem();
         mAbout = new javax.swing.JMenu();
         AboutUs = new javax.swing.JMenuItem();
 
@@ -123,37 +128,49 @@ public class Frame extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         rMin.setEditable(false);
+        rMin.setColumns(3);
         rMin.setText("NAN");
 
         gMin.setEditable(false);
+        gMin.setColumns(3);
         gMin.setText("NAN");
 
         bMin.setEditable(false);
+        bMin.setColumns(3);
         bMin.setText("NAN");
 
         rMean.setEditable(false);
+        rMean.setColumns(3);
         rMean.setText("NAN");
 
         gMean.setEditable(false);
+        gMean.setColumns(3);
         gMean.setText("NAN");
 
         bMean.setEditable(false);
+        bMean.setColumns(3);
         bMean.setText("NAN");
 
         rMax.setEditable(false);
+        rMax.setColumns(3);
         rMax.setText("NAN");
 
         gMax.setEditable(false);
+        gMax.setColumns(3);
         gMax.setText("NAN");
 
         bMax.setEditable(false);
+        bMax.setColumns(3);
         bMax.setText("NAN");
 
-        jLabel1.setText("R");
+        jLabel1.setForeground(new java.awt.Color(255, 0, 0));
+        jLabel1.setText("■");
 
-        jLabel2.setText("G");
+        jLabel2.setForeground(new java.awt.Color(0, 255, 0));
+        jLabel2.setText("■");
 
-        jLabel3.setText("B");
+        jLabel3.setForeground(new java.awt.Color(0, 0, 255));
+        jLabel3.setText("■");
 
         jLabel4.setText("MIN");
 
@@ -202,7 +219,7 @@ public class Frame extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
                             .addComponent(rMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -233,6 +250,10 @@ public class Frame extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jLabel7.setText("Alejandro García Sosa");
+
+        jLabel8.setText("Santiago Higuita Ardila ");
+
         mFile.setText("File");
 
         mOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
@@ -245,6 +266,19 @@ public class Frame extends javax.swing.JFrame {
         mFile.add(mOpen);
 
         jMenuBar1.add(mFile);
+
+        mView.setText("View");
+
+        mReset.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        mReset.setText("Reset View");
+        mReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mResetActionPerformed(evt);
+            }
+        });
+        mView.add(mReset);
+
+        jMenuBar1.add(mView);
 
         mAbout.setText("About");
 
@@ -267,9 +301,12 @@ public class Frame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(desl, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                .addComponent(desl, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -278,7 +315,13 @@ public class Frame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(desl, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel8)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -287,21 +330,34 @@ public class Frame extends javax.swing.JFrame {
 
     private void mOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mOpenActionPerformed
         // TODO add your handling code here:
-        filtro = new FileNameExtensionFilter("Imagen", "jpg", "png");
         fc.setFileFilter(filtro);
         int res = fc.showOpenDialog(null);
         if(res == JFileChooser.APPROVE_OPTION){
             vBar.setValue(0);
             hBar.setValue(0);
             File fichero = fc.getSelectedFile();
-            img = Imgcodecs.imread(fichero.getAbsolutePath());
-            imageC.setImage((BufferedImage) HighGui.toBufferedImage(img));
+            String name = fichero.getName();
+            String ex = name.substring(name.lastIndexOf("."));
+            if (ex.contains("jpg") || ex.contains("png")){
+                img = Imgcodecs.imread(fichero.getAbsolutePath());
+                imageC.setImage((BufferedImage) HighGui.toBufferedImage(img));
+            }else{
+                JOptionPane.showMessageDialog(this, "Formato de archivo no válido\nFormatos válidos:\n.jpg .png", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_mOpenActionPerformed
 
     private void AboutUsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AboutUsActionPerformed
         JOptionPane.showMessageDialog(this, "Versión 1.0.1\n\nHecho por:\nAlejandro García Sosa\nSantiago Higuita Ardila");
     }//GEN-LAST:event_AboutUsActionPerformed
+
+    private void mResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mResetActionPerformed
+        // TODO add your handling code here:
+        desl.setSize(desl.getPreferredSize());
+        vBar.setValue(0);
+        hBar.setValue(0);
+        pack();
+    }//GEN-LAST:event_mResetActionPerformed
 
     /**
      * @param args the command line arguments
@@ -354,11 +410,15 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JMenu mAbout;
     private javax.swing.JMenu mFile;
     private javax.swing.JMenuItem mOpen;
+    private javax.swing.JMenuItem mReset;
+    private javax.swing.JMenu mView;
     private javax.swing.JTextField rMax;
     private javax.swing.JTextField rMean;
     private javax.swing.JTextField rMin;
